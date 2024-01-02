@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Random=UnityEngine.Random;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -11,7 +12,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int width, height;
     private Vector2 center;
     [SerializeField] private Node nodePrefab;
-    [SerializeField] private SpriteRenderer boardPrefab;
 
     private Dictionary<Vector2, Node> nodes;
 
@@ -20,13 +20,12 @@ public class GridManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
+    public void BoardInit()
     {
         width = 4;
         height = 4;
         center = new Vector2((float)width / 2 - 0.5f, (float)height / 2 - 0.5f);
         nodes = new Dictionary<Vector2, Node>();
-
         GenerateGrid();
     }
 
@@ -44,25 +43,25 @@ public class GridManager : MonoBehaviour
         Camera.main.transform.position = new Vector3(center.x, center.y, -10);
         Camera.main.orthographicSize = 2.8f;
 
-        //GameManager.Instance.ChangeState(GameState.SpawnDice);
+        GameManager.Instance.ChangeState(GameState.SpawnBoxes);
     }
-}
-/*
-    public Dictionary<Vector2, Node> FindValidSpace(Die activeDie)
+
+
+    public Dictionary<Vector2, Node> FindValidSpaces()
     {
         //all empty nodes
-        var freeNodes = nodes.Where(n => n.Value.OccupiedDie == null).ToDictionary(i => i.Key, i => i.Value);
-
-        var adjacentNodes = InvalidNodeVectors(activeDie);
-
-        foreach (var adjNodes in adjacentNodes)
-        {
-            freeNodes.Remove(adjNodes);
-        }
-
+        var freeNodes = nodes.Where(n => n.Value.OccupiedBox == null).ToDictionary(i => i.Key, i => i.Value);
         return freeNodes;
     }
+    
+    public Vector2 GetRandomOpenNodeVector() 
+    {
+        var check = FindValidSpaces();
+        var rand = nodes.ElementAt(Random.Range(0, check.Count)).Key;
+        return rand;
+    }
 
+    /*
     public List<Vector2> InvalidNodeVectors(Die activeDie)
     {
         var adjacentNodes = new List<Vector2>();
@@ -166,5 +165,5 @@ public class GridManager : MonoBehaviour
         var test = confirmedRow.Distinct().ToList();
         return test;
     }
+    */
 }
-*/
