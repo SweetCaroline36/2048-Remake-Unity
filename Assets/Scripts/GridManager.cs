@@ -13,7 +13,7 @@ public class GridManager : MonoBehaviour
     private Vector2 center;
     [SerializeField] private Node nodePrefab;
 
-    private Dictionary<Vector2, Node> nodes;
+    public Dictionary<Vector2, Node> nodes;
 
     void Awake()
     {
@@ -57,113 +57,14 @@ public class GridManager : MonoBehaviour
     public Vector2 GetRandomOpenNodeVector() 
     {
         var check = FindValidSpaces();
-        var rand = nodes.ElementAt(Random.Range(0, check.Count)).Key;
+        var rand = check.ElementAt(Random.Range(0, check.Count)).Key;
         return rand;
     }
-
-    /*
-    public List<Vector2> InvalidNodeVectors(Die activeDie)
-    {
-        var adjacentNodes = new List<Vector2>();
-        //for every occupied node
-        foreach (var node in nodes.Where(n => n.Value.OccupiedDie != null).ToDictionary(i => i.Key, i => i.Value))
-        {
-            //valid empty nodes adjacent to existing occupied nodes that don't match color and number 
-            if (activeDie.getColor() != nodes[node.Key].OccupiedDie.getColor() && activeDie.getNumber() != nodes[node.Key].OccupiedDie.getNumber())
-            {
-                if (nodes.ContainsKey(node.Key + new Vector2(1, 0)) && nodes[node.Key + new Vector2(1, 0)].OccupiedDie == null)
-                {
-                    adjacentNodes.Add(node.Key + new Vector2(1, 0));
-                }
-                if (nodes.ContainsKey(node.Key + new Vector2(-1, 0)) && nodes[node.Key + new Vector2(-1, 0)].OccupiedDie == null)
-                {
-                    adjacentNodes.Add(node.Key + new Vector2(-1, 0));
-                }
-                if (nodes.ContainsKey(node.Key + new Vector2(0, 1)) && nodes[node.Key + new Vector2(0, 1)].OccupiedDie == null)
-                {
-                    adjacentNodes.Add(node.Key + new Vector2(0, 1));
-                }
-                if (nodes.ContainsKey(node.Key + new Vector2(0, -1)) && nodes[node.Key + new Vector2(0, -1)].OccupiedDie == null)
-                {
-                    adjacentNodes.Add(node.Key + new Vector2(0, -1));
-                }
-            }
-            
-        }
-        return adjacentNodes;
+    public Node ReturnNodeOfVector(Vector2 vector) {
+        return nodes[vector];
     }
 
-    public List<Node> InvalidNodes(List<Vector2> vectors)
-    {
-        var send = new List<Node>();
-        foreach (Vector2 v in vectors) {
-            send.Add(nodes[v]);
-        }
-        return send;
+    public bool IsNodeEmpty(Vector2 coords) {
+        return nodes[coords].OccupiedBox == null;
     }
-
-    public void PlaceDieInGrid(Node node, Die die)
-    {
-        //die.OccupiedNode = node;
-        node.SetDie(die);
-        DiceManager.Instance.removeRackDie(die);
-        DiceManager.Instance.setDiePos(die);
-    }
-
-    public void RemoveDiceFromGrid(Die die)
-    {
-        nodes[DiceManager.Instance.getDiePos(die)].RemoveDie(die);
-    }
-
-    public List<Die> CheckForStraightRow()
-    {
-        List<Die> rowCandidates = new List<Die>();
-        List<Die> colCandidates = new List<Die>();
-        List<Die> confirmedRow = new List<Die>();
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                if (nodes[new Vector2(x, y)].OccupiedDie != null)
-                {
-                    rowCandidates.Add(nodes[new Vector2(x, y)].OccupiedDie);
-                }
-                if (nodes[new Vector2(y, x)].OccupiedDie != null)
-                {
-                    colCandidates.Add(nodes[new Vector2(y, x)].OccupiedDie);
-                }
-            }
-
-            if (rowCandidates.Count() != height) 
-            {
-                rowCandidates.Clear();
-            } 
-            else
-            {
-                foreach (Die candidates in rowCandidates)
-                {
-                    confirmedRow.Add(candidates);
-                    //print(candidates.getNumber());
-                }
-                rowCandidates.Clear();
-            }
-            if (colCandidates.Count() != width)
-            {
-                colCandidates.Clear();
-            }
-            else
-            {
-                foreach (Die candidates in colCandidates)
-                {
-                    confirmedRow.Add(candidates);
-                    //print(candidates.getNumber());
-                }
-                colCandidates.Clear();
-            }
-        }
-        var test = confirmedRow.Distinct().ToList();
-        return test;
-    }
-    */
 }

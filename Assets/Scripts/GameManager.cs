@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown("enter"))
+        if (Input.GetKeyDown("return"))
         {
             Reset();
         }
