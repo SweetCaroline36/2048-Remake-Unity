@@ -110,8 +110,8 @@ public class BoxManager : MonoBehaviour
             oldBox.OccupiedNode.RemoveBox(oldBox);  //remove box reference from previous node
             GridManager.Instance.ReturnNodeOfVector(newCoords).SetBox(oldBox);  //add box reference to new node
             boxes[newCoords] = oldBox;  //update box dictionary
-            boxes.Remove(oldCoords); 
-        }   //remove old dictionary reference
+            boxes.Remove(oldCoords); //remove old dictionary reference
+        }   
     }
 
     public void MoveBoxes(Direction direction) {
