@@ -32,8 +32,17 @@ public class GameManager : MonoBehaviour
         {
             Reset();
         }
+        if(Input.GetKeyDown("escape")) {
+            QuitGame();
+        }
     }
-
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+        Application.Quit();
+    }
     public bool getGameOver()
     {
         return gameOver;
@@ -42,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
         //scoreCanvas.SetActive(false);
-        IEnumerator end = WaitAndEnd(2f);
+        IEnumerator end = WaitAndEnd(0.8f);
         StartCoroutine(end);
         //DiceManager.Instance.stopDragger();
     }

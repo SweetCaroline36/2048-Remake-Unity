@@ -13,6 +13,8 @@ public class BoxManager : MonoBehaviour
 
     [SerializeField] private Box boxPrefab;
 
+    [SerializeField] private Score score;
+
     //private Dictionary<Vector2, Box> boxes;
     private Dictionary<Vector2, Box> boxes = new Dictionary<Vector2, Box>();
     private bool anythingMoved = false;
@@ -85,6 +87,7 @@ public class BoxManager : MonoBehaviour
     }
 
     public void MergeBoxes(Box movingBox, Box destBox) {
+        score.AddToScore(destBox.GetNumber() * 2);
         destBox.SetNumber(destBox.GetNumber() * 2);
         destBox.HasMerged = true;
         movingBox.OccupiedNode.RemoveBox(movingBox);
