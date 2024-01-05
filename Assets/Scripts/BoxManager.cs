@@ -24,17 +24,19 @@ public class BoxManager : MonoBehaviour
     }
 
     void Update() {
-        if(Input.GetKeyDown("d") || Input.GetKeyDown("right")){
-            MoveBoxes(Direction.Right);
-        }
-        if(Input.GetKeyDown("a") || Input.GetKeyDown("left")){
-            MoveBoxes(Direction.Left);
-        }
-        if(Input.GetKeyDown("s") || Input.GetKeyDown("down")){
-            MoveBoxes(Direction.Down);
-        }
-        if(Input.GetKeyDown("w") || Input.GetKeyDown("up")){
-            MoveBoxes(Direction.Up);
+        if(!GameManager.Instance.getGameOver()) {
+            if(Input.GetKeyDown("d") || Input.GetKeyDown("right")){
+                MoveBoxes(Direction.Right);
+            }
+            if(Input.GetKeyDown("a") || Input.GetKeyDown("left")){
+                MoveBoxes(Direction.Left);
+            }
+            if(Input.GetKeyDown("s") || Input.GetKeyDown("down")){
+                MoveBoxes(Direction.Down);
+            }
+            if(Input.GetKeyDown("w") || Input.GetKeyDown("up")){
+                MoveBoxes(Direction.Up);
+            }
         }
     }
 
@@ -52,6 +54,9 @@ public class BoxManager : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         SpawnBox();
+        if(boxes.Count == 16 && noMoreMoves()) {
+            GameManager.Instance.GameOver();
+        }
     }
     private IEnumerator WaitAndDestroy(float waitTime, Box box)
     {
@@ -62,6 +67,21 @@ public class BoxManager : MonoBehaviour
     public void CreateTwoBoxes() {
         SpawnBox();
         SpawnBox();
+    }
+
+    private bool noMoreMoves() {
+        bool canMove = false;
+        for (int i = 0; i<4; i++) {
+            for (int j = 0; j<3; j++) {
+                if(boxes.ContainsKey(new Vector2(i+1,j)) && boxes[new Vector2(i,j)].GetNumber() == boxes[new Vector2(i+1,j)].GetNumber()) {
+                    canMove = true;
+                }
+                if(boxes.ContainsKey(new Vector2(i,j+1)) && boxes[new Vector2(i,j)].GetNumber() == boxes[new Vector2(i,j+1)].GetNumber()) {
+                    canMove = true;
+                }
+            }
+        }
+        return !canMove;
     }
 
     public void MergeBoxes(Box movingBox, Box destBox) {

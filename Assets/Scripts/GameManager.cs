@@ -9,11 +9,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public GameState GameState;
 
     [SerializeField] private GameObject scoreCanvas;
     [SerializeField] private GameObject gameOverCanvas;
-    [SerializeField] private bool gameOver = false;
+    public GameState GameState;
+    private bool gameOver = false;
 
 
     void Awake()
@@ -41,14 +41,24 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         gameOver = true;
-        scoreCanvas.SetActive(false);
-        gameOverCanvas.SetActive(true);
+        //scoreCanvas.SetActive(false);
+        IEnumerator end = WaitAndEnd(2f);
+        StartCoroutine(end);
         //DiceManager.Instance.stopDragger();
+    }
+
+    private IEnumerator WaitAndEnd(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        var canvasAnimator = gameOverCanvas.GetComponent<Animator>();
+        gameOverCanvas.SetActive(true);
+        canvasAnimator.Play("GameOverAppear", 0, 0);
     }
 
     public void Reset()
     {
         //Score.score = 0;
+        gameOver = false;
         SceneManager.LoadScene(0);
         //Score.score = 0;
     }
@@ -63,13 +73,6 @@ public class GameManager : MonoBehaviour
             case GameState.SpawnBoxes:
                 BoxManager.Instance.CreateTwoBoxes();
                 break;
-            case GameState.Play:
-                //snapController.SetActive(true);
-                //sc.checkGameOver();
-                break;
-            case GameState.GameOver:
-                GameOver();
-                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
         }
@@ -79,8 +82,6 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     GenerateGrid = 0,
-    SpawnBoxes = 1,
-    Play = 2,
-    GameOver = 3
+    SpawnBoxes = 1
 }
 
